@@ -62,6 +62,13 @@ configure_file(
 # # # # # # ##################################################################
 # Options
 # # # # # # ##################################################################
+
+option(ENABLE_RTUE           "Enable rtue build"                        OFF)
+option(ENABLE_SSB_SPOOFER    "Enable ssb-spoofer build"                 OFF)
+option(ENABLE_UU_AGENT       "Enable uuagent build"                     OFF)
+option(ENABLE_RACH_AGENT     "Enable rach-agent build"                  ON)
+option(ENABLE_JAMMER         "Enable jammer build"                      ON)
+
 option(DISABLE_SIMD          "Disable SIMD instructions"                OFF)
 option(AUTO_DETECT_ISA       "Autodetect supported ISA extensions"      ON)
 
@@ -653,7 +660,17 @@ add_custom_target(add_srsran_headers SOURCES ${HEADERS_ALL})
 add_subdirectory(lib)
 
 if(RF_FOUND)
-    add_subdirectory(rtue)
+		if(ENABLE_RTUE)
+			add_subdirectory(rtue)
+		endif(ENABLE_RTUE)
+
+		if(ENABLE_SSB_SPOOFER)
+			add_subdirectory(ssb-spoofer)
+		endif(ENABLE_SSB_SPOOFER)
+
+		if(ENABLE_UU_AGENT)
+			add_subdirectory(uuagent)
+		endif(ENABLE_UU_AGENT)
 else(RF_FOUND)
-  message(STATUS "srsUE and srsENB/srsGNB builds disabled due to missing RF driver")
+  message(FATAL_ERROR "RF driver not found")
 endif(RF_FOUND)
