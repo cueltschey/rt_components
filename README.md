@@ -1,31 +1,43 @@
-# NTIA RAN Tester UE
+# RAN Tester UE Components
 
-This is a modification of srsRAN's UE software for use in security testing. It has enhanced metrics logging capabilites, and several attacks that can be launched against the RAN.
+This is a collection of attack tools for use in the RAN Tester UE system. Building in a docker container is recommended
 
 ---
 
 See the our comprehensive [documentation ](https://docs.rantesterue.org) for more info on our attacks and metrics.
 
-## Quickstart Guide
+## Building Each Component
 
-1. Install Build Dependencies:
+1. Ran Tester UE
 
 ```bash
-sudo apt-get update && sudo apt-get install -y cmake gcc g++ make libzmq3-dev libboost-all-dev \
-    libuhd-dev uhd-host pkg-config libfftw3-dev libmbedtls-dev libsctp-dev libyaml-cpp-dev libgtest-dev
+mkdir -p build && cd build
+cmake -DENABLE_RTUE=ON ..
 ```
 
-2. Clone the core repository:
+2. SSB Spoofer
 
 ```bash
-git clone https://github.com/oran-testing/rtue.git
+mkdir -p build && cd build
+cmake -DENABLE_SSB_SPOOFER=ON ..
 ```
-3. Build from Source:
+
+3. UU Agent
 
 ```bash
-cd rtue
-mkdir build && cd build
-cmake ../
-make -j $(nproc)
-sudo make install
+mkdir -p build && cd build
+cmake -DENABLE_UU_AGENT=ON ..
+```
+
+## Using in the RAN Tester UE system
+
+There are dockerfiles that build these binaries in the repo [https://github.com/oran-testing/ran-tester-ue](https://github.com/oran-testing/ran-tester-ue)
+
+Specify the containers you want in the `build_spec` section of the config:
+
+```yaml
+build_spec:
+  - component: uu-agent
+		docker_image: ghcr.io/oran-testing/uu-agent
+    pull: false
 ```
